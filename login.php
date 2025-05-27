@@ -1,10 +1,12 @@
 <?php
+session_start();
 $correct_password = "admin123";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     if ($password === $correct_password) {
-        setcookie("admin_auth", "true", time() + 600, "/"); // kehtib 5 minutit
+        //setcookie("admin_auth", "true", time() + 600, "/"); // kehtib 5 minutit
+        $_SESSION['admin_auth'] = true; // kasutaja on sisse loginud
         header("Location: admin.php");
         exit;
     } else {

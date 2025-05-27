@@ -25,5 +25,27 @@ sest õpetaja githubi ilma kutseta lisada ei saa, selle asemel peab olmea teie e
 
 Siia palun tee loetelu kõikidest asjadest mida sa tegid. Järjekord pole oluline.
 * Tegevus
-* ...
+1. Tegin phpMyAdmin-is uue andmebaasi nimega "homework". Lisasin sellele tabeli nimega "feedback". Struktuur: id; added; name; email; message.
+2. Tegin faili settings.php andmebaasiga suhtlemiseks
+3. Tegin faili mysqli.php kuhu lisasin kõik andmebaasiga seotud funktsioonid.
+4. Lisasin faili submit_feedback.php:
+    * Faili algusesse peale php tag-i read require_once("settings.php"); require_once("mysqli.php"); // laevad andmebaasiseaded ja ühenduse klassi.
+    * If lauses peale csv faili kirjutamise osa lisasin: $db = new Db();
+        $db->addFeedback($timestamp, $name, $email, $message); //kasutab DB klasii addFeedback() funktsiooni andmete lisamiseks andmebaasi.
+5. Failis admin.php tegin järgnevad muudatuded:
+    * Faili algusesse peale php tag-i read require_once("settings.php"); require_once("mysqli.php"); // laevad andmebaasiseaded ja ühenduse klassi.
+    * Kommenteerisin välja koodi osa mis laeb andmed CSV failist.
+    * Lisasin eelneva asemele read  $db = new Db();
+        $rows = $db->getFeedback(); mis kasutab DB klassis olevat funktsiooni getFeedback().
+    *Lisasin kustutamise jaoks If lause peale $Db = new Db(). See kasutab mysqli.php-s olevat funktsiooni deleteFeedback().
+    *Html osas lisasin ühe tabeli rea nimega "Kustuta". Muudtsin html osas tbody php osa nii, et laeb lahtritesse iga rea eraldi ja viimasesse lahtrisse lisasin kustutamise nuppu. 
+6. Kuna feedback.csv failist võiksid ka kustutatud postitused ära kaduda, siis kõige lihtsam tundus teha nii, et peale iga kustutamist kirjutatakse csv fail lihtsalt uuesti     värske andmebaasi sisuga. Ei ole kindel kas on õige lähenemine aga töötab. Selleks lisasin admin.php kustutamise if lause järele csv faili kirjutamise osa. 
+
+# Lisa - Sessiooni põhiseks sisselogimiseks:
+    * login.php - Lisasin faili algusesse session_start(); ja setcookie asemele $_SESSION['admin_auth'] = true;
+    * admin.php - Lisasin faili algusesse session_start(); ja //if ($_COOKIE["admin_auth"] !== "true") asemele if (empty($_SESSION['admin_auth']) || $_SESSION['admin_auth'] !== true)
+    * logout.php - Lisasin faili algusesse session_start(); ja setcookie os aslemele sessiooni tühjendamiseks ja lõpetamineks lisasin session_start();
+session_unset(); session_destroy();
+
+
 
