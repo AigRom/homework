@@ -1,6 +1,6 @@
 <?php
 require_once("settings.php"); // DB konstandid
-require_once("mysqli.php"); // DB klass
+require_once("mysqli.php");   // DB klass
 
 //if ($_COOKIE["admin_auth"] !== "true") {
 session_start();
@@ -17,19 +17,22 @@ if (isset($_GET['sid']) && is_numeric($_GET['sid']) && isset($_GET['delete'])) {
     $id = (int)$_GET['sid'];
     if ($db->deleteFeedback($id)) {
         echo "<div class='alert alert-success text-center'>Tagasiside edukalt kustutatud.</div>";
-            // Kirjuta feedback.csv fail uuesti kogu andmebaasi sisu põhjal
-    $all = $db->getFeedback(); //võtab tagasiside kirjed andmebaasist
-    $csv_rows = []; //Loob tühja massiivi
 
-    foreach ($all as $row) { //Käib iga andmebaasi rea läbi
-        $timestamp = $row['added'];
-        $name = str_replace(";", " ", $row['name']);
-        $email = str_replace(";", " ", $row['email']);
-        $message = str_replace(["\r", "\n", ";"], " ", $row['message']);
-        $csv_rows[] = "$timestamp;$name;$email;$message";
-    }
+        // Kirjuta feedback.csv fail uuesti kogu andmebaasi sisu põhjal
+        $all = $db->getFeedback(); // võtab tagasiside kirjed andmebaasist
+        $csv_rows = []; // loob tühja massiivi
 
-    file_put_contents("feedback.csv", implode("\n", $csv_rows) . "\n");
+        if ($all) { // kui kirjed on olemas
+            foreach ($all as $row) { // käib iga andmebaasi rea läbi
+                $timestamp = $row['added'];
+                $name = str_replace(";", " ", $row['name']);
+                $email = str_replace(";", " ", $row['email']);
+                $message = str_replace(["\r", "\n", ";"], " ", $row['message']);
+                $csv_rows[] = "$timestamp;$name;$email;$message";
+            }
+
+            file_put_contents("feedback.csv", implode("\n", $csv_rows) . "\n"); // kirjutab CSV faili
+        }
 
     } else {
         echo "<div class='alert alert-danger text-center'>Kustutamisel tekkis tõrge.</div>";
@@ -68,7 +71,8 @@ if (file_exists("feedback.csv")) {
             <a href="index.php" class="btn btn-outline-success me-1">Avaleht</a>
             <a href="logout.php" class="btn btn-outline-danger">Logi välja</a>
         </div>
-        <?php if (count($rows) > 0): ?>
+
+        <?php if (!empty($rows)): ?> 
             <table class="table table-bordered table-striped">
                 <thead class="table-dark">
                     <tr>

@@ -26,6 +26,15 @@ sest õpetaja githubi ilma kutseta lisada ei saa, selle asemel peab olmea teie e
 Siia palun tee loetelu kõikidest asjadest mida sa tegid. Järjekord pole oluline.
 * Tegevus
 1. Tegin phpMyAdmin-is uue andmebaasi nimega "homework". Lisasin sellele tabeli nimega "feedback". Struktuur: id; added; name; email; message.
+    SQL lause tabeli loomiseks:
+    CREATE TABLE feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    added DATETIME NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL
+);
+
 2. Tegin faili settings.php andmebaasiga suhtlemiseks
 3. Tegin faili mysqli.php kuhu lisasin kõik andmebaasiga seotud funktsioonid.
 4. Lisasin faili submit_feedback.php:
@@ -40,6 +49,10 @@ Siia palun tee loetelu kõikidest asjadest mida sa tegid. Järjekord pole olulin
     *Lisasin kustutamise jaoks If lause peale $Db = new Db(). See kasutab mysqli.php-s olevat funktsiooni deleteFeedback().
     *Html osas lisasin ühe tabeli rea nimega "Kustuta". Muudtsin html osas tbody php osa nii, et laeb lahtritesse iga rea eraldi ja viimasesse lahtrisse lisasin kustutamise nuppu. 
 6. Kuna feedback.csv failist võiksid ka kustutatud postitused ära kaduda, siis kõige lihtsam tundus teha nii, et peale iga kustutamist kirjutatakse csv fail lihtsalt uuesti     värske andmebaasi sisuga. Ei ole kindel kas on õige lähenemine aga töötab. Selleks lisasin admin.php kustutamise if lause järele csv faili kirjutamise osa. 
+7. Teises arvutis projekti avamisel ilmnenud vigade parandamine:
+    * admin.php - Enne foreach tsüklit lisasin if ($all) kontroll. Fail feedback.csv uuendatakse ainult siis, kui andmebaasist saadi tagasisidet (vältimaks tühja faili).
+    Lisasin html osas if (!empty($rows)). Kui andmebaasis pole tagasisidet, kuvatakse lehel tekst: "Tagasisidet ei ole veel saabunud." Enne viskas selline olukord veateate (count(): Argument #1 must be of type array)
+    
 
 # Lisa - Sessiooni põhiseks sisselogimiseks:
     * login.php - Lisasin faili algusesse session_start(); ja setcookie asemele $_SESSION['admin_auth'] = true;
